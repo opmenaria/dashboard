@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Table, Space, Tag, Avatar, Image, Popover, Dropdown, Button } from 'antd'
+import { Card, Col, Input, Row, Table, Space, Tag, Avatar, Image, Popover, Dropdown, Button, Tooltip, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import type { MenuProps, TableProps } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
@@ -9,8 +9,18 @@ import { RiFileList3Line } from "react-icons/ri";
 import { SlWallet } from "react-icons/sl";
 import { HiOutlineBriefcase } from "react-icons/hi2";
 import { LuBadgePercent, LuMenuSquare } from "react-icons/lu";
-import { MdDelete, MdOutlineLiveHelp } from 'react-icons/md';
+import { MdDelete, MdOutlineLiveHelp, MdOutlineSettingsBackupRestore } from 'react-icons/md';
+import { FaPlus } from 'react-icons/fa';
+import RowForm from './RowForm';
 
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  tags: string[];
+  img:string;
+}
 const Header=()=> {
   
   const data: DataType[] = [
@@ -42,16 +52,6 @@ const Header=()=> {
  
 
   const style: React.CSSProperties = { background: 'white', padding: '8px', marginBottom:'1.5em', borderRadius:'.5rem'};
-
-
-  interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-    img:string;
-  }
   
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -117,12 +117,9 @@ const Header=()=> {
     { title:"Balance", icon:<SlWallet size={70} />, earn:'$198K', rate:'37.8% This month' , col:"blue", fil:'#d8d5ff'},
     { title:"Total Sales", icon:<HiOutlineBriefcase size={70} />, earn:'$198K', rate:'37.8% This month', col:"#ffbc00", fil:'#f4ffb4' },
   ]
-  const [tablRow, setTablRow]=useState(data)
+  const [tablRow, setTablRow]: [DataType[], React.Dispatch<React.SetStateAction<DataType[]>>] = useState(data);
   const [srchTab, setTrchTab]=useState("")
   const [open, setOpen] = useState(false);
-  const hide = () => {
-    setOpen(false);
-  };
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -191,7 +188,7 @@ const Header=()=> {
         <div style={{background:'rgb(255 255 255 / 76%)'}} className=' w-full flex text-center items-center px-3 rounded-md border border-gray-300 justify-between'> 
             <h3 className=' p-1 ' style={{fontSize:'1.3rem'}}>Hello User 👋</h3>
             <div className=' flex gap-2 items-center'>
-            <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
+            <Input.Search disabled value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
             <Dropdown trigger={["click"]} menu={{ items }} placement="bottomRight" arrow>
             <LuMenuSquare 
               className='md:hidden flex cursor-pointer'
@@ -205,8 +202,8 @@ const Header=()=> {
         {data2.map(el=>{
           return(
             <Col className="gutter-row" lg={6} md={12} sm={12} xs={24}>
-            <div style={{ ...style, height: '10rem', display: 'flex' }}>
-              <div className='w-1/2 h-full flex items-center'>
+            <div className=' hover:shadow-lg hover:shadow-gray-500/50 cursor-pointer' style={{ ...style, height: '10rem', display: 'flex',  }}>
+              <div className='w-1/2 h-full flex items-center '>
                 <Avatar size={ 100} style={{color: `${el.col}`, background: `${el.fil}`}}
                       icon={el.icon}
                     />
@@ -217,7 +214,8 @@ const Header=()=> {
                 <p style={{fontSize:'.8em', color:'gray'}} className=' flex'><IoIosArrowRoundUp size={18}/> {el.rate}</p>
               </div>
             </div>
-          </Col>        )
+          </Col>       
+           )
         })}
     </Row>
 
@@ -242,8 +240,43 @@ const Header=()=> {
           </Col>
     </Row>
 
-    <Card title="Product Sell" extra={ 
-        <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
+    <Card title="Product Sell"
+    headStyle={{background:'#010b70', color:'white'}} extra={ 
+      <div className='flex items-center gap-3'>
+        <Tooltip title="Revoke">
+          <Button disabled={tablRow.length===data.length} type="primary">
+            <MdOutlineSettingsBackupRestore onClick={()=>setTablRow(data)} className=' text-white text-2xl cursor-pointer'/>
+          </Button>
+        </Tooltip>
+         
+        <Tooltip title="Add Row">
+          <Button disabled={open} type="primary">
+            <FaPlus onClick={()=>setOpen(true)} className=' text-white text-2xl cursor-pointer'/>
+          </Button>
+        </Tooltip>
+        <Modal
+        open={open}
+        destroyOnClose
+        title="Title"
+        // onOk={handleOk}
+        onCancel={()=>setOpen(false)}
+        footer={null}
+        // footer={[
+        //   <Button key="back" onClick={()=>setOpen(false)}>
+        //     Cancel
+        //   </Button>,
+        //   <Button key="submit" type="primary" 
+        //   // loading={loading} onClick={handleOk}
+        //   >
+        //     Submit
+        //   </Button>
+        // ]}
+      >
+        <RowForm setTablRow={setTablRow} tablRow={tablRow} setOpen={setOpen}/>
+      </Modal>
+         
+            <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200}} />
+        </div>
     }>
     <Table 
     style={{minHeight:'40vh'}}
