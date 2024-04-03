@@ -183,12 +183,12 @@ const Header=()=> {
     },
   ];
   return (
-    <div className=' bg-zinc-200 w-full px-10 py-5' >
+    <div className=' bg-zinc-200 w-full md:px-10 px-5 py-5' >
       <div className='flex justify-between align-middle pb-4 sticky top-6 z-10'>
         <div style={{background:'rgb(255 255 255 / 76%)'}} className=' w-full flex text-center items-center px-3 rounded-md border border-gray-300 justify-between'> 
             <h3 className=' p-1 ' style={{fontSize:'1.3rem'}}>Hello User 👋</h3>
             <div className=' flex gap-2 items-center'>
-            <Input.Search disabled value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
+            <Input.Search className='md:flex hidden ' disabled value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
             <Dropdown trigger={["click"]} menu={{ items }} placement="bottomRight" arrow>
             <LuMenuSquare 
               className='md:hidden flex cursor-pointer'
@@ -240,9 +240,9 @@ const Header=()=> {
           </Col>
     </Row>
 
-    <Card title="Product Sell"
+    <Card title="Product Sell" style={{ overflow:"scroll"}}
     headStyle={{background:'#010b70', color:'white'}} extra={ 
-      <div className='flex items-center gap-3'>
+      <div className=' items-center gap-3 md:flex hidden'>
         <Tooltip title="Revoke">
           <Button disabled={tablRow.length===data.length} type="primary">
             <MdOutlineSettingsBackupRestore onClick={()=>setTablRow(data)} className=' text-white text-2xl cursor-pointer'/>
@@ -258,30 +258,20 @@ const Header=()=> {
         open={open}
         destroyOnClose
         title="Title"
-        // onOk={handleOk}
         onCancel={()=>setOpen(false)}
         footer={null}
-        // footer={[
-        //   <Button key="back" onClick={()=>setOpen(false)}>
-        //     Cancel
-        //   </Button>,
-        //   <Button key="submit" type="primary" 
-        //   // loading={loading} onClick={handleOk}
-        //   >
-        //     Submit
-        //   </Button>
-        // ]}
       >
         <RowForm setTablRow={setTablRow} tablRow={tablRow} setOpen={setOpen}/>
       </Modal>
          
-            <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200}} />
+            <Input.Search  value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200}} />
         </div>
     }>
     <Table 
     style={{minHeight:'40vh'}}
     pagination={false} 
-    columns={columns} dataSource={tablRow} />
+    columns={columns} dataSource={tablRow} 
+    />
     </Card>
     </div>
   )
