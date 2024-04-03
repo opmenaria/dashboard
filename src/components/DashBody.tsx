@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Table, Space, Tag, Avatar, Image, Popover, Dropdown } from 'antd'
+import { Card, Col, Input, Row, Table, Space, Tag, Avatar, Image, Popover, Dropdown, Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import type { MenuProps, TableProps } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
@@ -9,7 +9,7 @@ import { RiFileList3Line } from "react-icons/ri";
 import { SlWallet } from "react-icons/sl";
 import { HiOutlineBriefcase } from "react-icons/hi2";
 import { LuBadgePercent, LuMenuSquare } from "react-icons/lu";
-import { MdOutlineLiveHelp } from 'react-icons/md';
+import { MdDelete, MdOutlineLiveHelp } from 'react-icons/md';
 
 const Header=()=> {
   
@@ -97,12 +97,14 @@ const Header=()=> {
       ),
     },
     {
-      title: 'Action',
+      title: 'Delete',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
+            <MdDelete style={{color:'red', cursor:'pointer'}} onClick={(eve)=>{
+              console.log("first ", record)
+              setTablRow(row=>row.filter(row => row.key !== record.key))
+            }} size={22} />
         </Space>
       ),
     },
@@ -170,7 +172,7 @@ const Header=()=> {
       label: (
         <a target="_blank" rel="noopener noreferrer" href="/"  className='flex gap-2'>
           <LuBadgePercent size={20}/>
-     Promote
+            Promote
         </a>
       ),
     },
@@ -192,7 +194,7 @@ const Header=()=> {
             <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
             <Dropdown trigger={["click"]} menu={{ items }} placement="bottomRight" arrow>
             <LuMenuSquare 
-              className='md:hidde flex cursor-pointer'
+              className='md:hidden flex cursor-pointer'
               size={28}>Click me</LuMenuSquare>  
             </Dropdown>
             </div>
@@ -244,6 +246,7 @@ const Header=()=> {
         <Input.Search value={srchTab} placeholder="Search here" allowClear onChange={onChange} style={{ width: 200 }} />
     }>
     <Table 
+    style={{minHeight:'40vh'}}
     pagination={false} 
     columns={columns} dataSource={tablRow} />
     </Card>
